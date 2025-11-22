@@ -19,8 +19,9 @@ const bat = {
     width: 50,
     height: 40,
     velocity: 0,
-    gravity: 0.3,
-    jump: -12,
+    gravity: 0.2,
+    jump: -14,
+    maxFallSpeed: 6,
     rotation: 0,
     wingAngle: 0,
     wingSpeed: 0.3
@@ -106,7 +107,7 @@ function startGame() {
     score = 0;
     obstacles = [];
     bat.y = canvas.height / 2;
-    bat.velocity = -2;
+    bat.velocity = -3;
     frameCount = 0;
     gameLoop();
 }
@@ -132,6 +133,10 @@ function update() {
     
     // Actualizar murciélago
     bat.velocity += bat.gravity;
+    // Limitar velocidad máxima de caída
+    if (bat.velocity > bat.maxFallSpeed) {
+        bat.velocity = bat.maxFallSpeed;
+    }
     bat.y += bat.velocity;
     bat.rotation = Math.min(Math.max(bat.velocity * 3, -30), 90);
     bat.wingAngle += bat.wingSpeed;
