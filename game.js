@@ -24,7 +24,7 @@ const bat = {
     width: 50,
     height: 40,
     velocity: 0,
-    gravity: 0.2,
+    gravity: 0.15,
     jump: -14,
     maxFallSpeed: 6,
     rotation: 0,
@@ -34,7 +34,7 @@ const bat = {
 
 // Variables de obstáculos
 let obstacles = [];
-const obstacleGap = 200;
+const obstacleGap = 250;
 const obstacleWidth = 80;
 let frameCount = 0;
 
@@ -170,7 +170,7 @@ function update() {
     
     // Actualizar obstáculos
     frameCount++;
-    if (frameCount % 120 === 0) {
+    if (frameCount % 150 === 0) {
         createObstacle();
     }
     
