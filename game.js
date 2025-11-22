@@ -2,14 +2,9 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Detectar si es móvil
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-
-// Tamaño del canvas - reducir resolución en móviles para mejor rendimiento
-const baseWidth = isMobile ? 400 : 800;
-const baseHeight = isMobile ? 300 : 600;
-canvas.width = baseWidth;
-canvas.height = baseHeight;
+// Tamaño del canvas
+canvas.width = 800;
+canvas.height = 600;
 
 // Variables del juego
 let gameState = 'start'; // 'start', 'playing', 'gameover'
@@ -24,9 +19,8 @@ const bat = {
     width: 50,
     height: 40,
     velocity: 0,
-    gravity: 0.15,
-    jump: -14,
-    maxFallSpeed: 6,
+    gravity: 0.5,
+    jump: -10,
     rotation: 0,
     wingAngle: 0,
     wingSpeed: 0.3
@@ -34,7 +28,7 @@ const bat = {
 
 // Variables de obstáculos
 let obstacles = [];
-const obstacleGap = 250;
+const obstacleGap = 200;
 const obstacleWidth = 80;
 let frameCount = 0;
 
@@ -55,15 +49,6 @@ const cityColors = {
     neon2: '#FF00FF',
     neon3: '#00FF88'
 };
-
-// Función helper para aplicar shadowBlur optimizado para móviles
-function setShadowBlur(value) {
-    if (!isMobile) {
-        ctx.shadowBlur = value;
-    } else {
-        ctx.shadowBlur = value * 0.3; // Reducir significativamente en móviles
-    }
-}
 
 // Inicializar el juego
 function init() {
@@ -90,12 +75,10 @@ function init() {
 
 // Inicializar fondo
 function initBackground() {
-    // Crear edificios futuristas del fondo - menos en móviles
-    const buildingCount = isMobile ? 5 : 8;
-    const buildingSpacing = isMobile ? 120 : 150;
-    for (let i = 0; i < buildingCount; i++) {
+    // Crear edificios futuristas del fondo
+    for (let i = 0; i < 8; i++) {
         buildings.push({
-            x: i * buildingSpacing,
+            x: i * 150,
             height: 100 + Math.random() * 150,
             width: 120 + Math.random() * 30,
             color: Object.values(cityColors).slice(0, 5)[Math.floor(Math.random() * 5)],
@@ -104,9 +87,8 @@ function initBackground() {
         });
     }
     
-    // Crear estrellas - menos en móviles para mejor rendimiento
-    const starCount = isMobile ? 40 : 100;
-    for (let i = 0; i < starCount; i++) {
+    // Crear estrellas
+    for (let i = 0; i < 100; i++) {
         stars.push({
             x: Math.random() * canvas.width,
             y: Math.random() * (canvas.height - 100),
@@ -124,7 +106,7 @@ function startGame() {
     score = 0;
     obstacles = [];
     bat.y = canvas.height / 2;
-    bat.velocity = -3;
+    bat.velocity = 0;
     frameCount = 0;
     gameLoop();
 }
@@ -150,10 +132,6 @@ function update() {
     
     // Actualizar murciélago
     bat.velocity += bat.gravity;
-    // Limitar velocidad máxima de caída
-    if (bat.velocity > bat.maxFallSpeed) {
-        bat.velocity = bat.maxFallSpeed;
-    }
     bat.y += bat.velocity;
     bat.rotation = Math.min(Math.max(bat.velocity * 3, -30), 90);
     bat.wingAngle += bat.wingSpeed;
@@ -170,14 +148,13 @@ function update() {
     
     // Actualizar obstáculos
     frameCount++;
-    if (frameCount % 150 === 0) {
+    if (frameCount % 120 === 0) {
         createObstacle();
     }
     
-    // Mover y verificar obstáculos - más lento en móviles para mejor rendimiento
-    const obstacleSpeed = isMobile ? 2 : 3;
+    // Mover y verificar obstáculos
     for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].x -= obstacleSpeed;
+        obstacles[i].x -= 3;
         
         // Verificar colisión
         if (checkCollision(bat, obstacles[i])) {
@@ -204,10 +181,9 @@ function update() {
 
 // Actualizar fondo
 function updateBackground() {
-    // Mover edificios - más lento en móviles
-    const backgroundSpeed = isMobile ? 0.3 : 0.5;
+    // Mover edificios
     for (let building of buildings) {
-        building.x -= backgroundSpeed;
+        building.x -= 0.5;
         if (building.x + building.width < 0) {
             building.x = canvas.width;
             building.height = 100 + Math.random() * 150;
@@ -400,7 +376,7 @@ function drawBackgroundBuilding(building) {
                 ctx.fillRect(wx, wy, windowSize, windowSize);
                 
                 // Brillo alrededor
-                setShadowBlur(5);
+                ctx.shadowBlur = 5;
                 ctx.shadowColor = building.neonColor;
                 ctx.fillRect(wx, wy, windowSize, windowSize);
                 ctx.shadowBlur = 0;
@@ -425,7 +401,7 @@ function drawBackgroundBuilding(building) {
         const blink = Math.sin(Date.now() / 1500) * 0.3 + 0.7; // Más lento y menos variación
         ctx.fillStyle = building.neonColor;
         ctx.globalAlpha = blink;
-        setShadowBlur(10);
+        ctx.shadowBlur = 10;
         ctx.shadowColor = building.neonColor;
         ctx.beginPath();
         ctx.arc(antennaX, y - 20, 3, 0, Math.PI * 2);
@@ -509,7 +485,7 @@ function drawBuilding(x, y, width, height, color, neonColor, glowIntensity, isTo
             if (isOn) {
                 // Ventana encendida con efecto neón
                 ctx.fillStyle = neonColor;
-                setShadowBlur(8);
+                ctx.shadowBlur = 8;
                 ctx.shadowColor = neonColor;
                 ctx.fillRect(wx, wy, windowSize, windowSize);
                 ctx.shadowBlur = 0;
@@ -529,7 +505,7 @@ function drawBuilding(x, y, width, height, color, neonColor, glowIntensity, isTo
         const antennaX = x + width / 2;
         ctx.strokeStyle = neonColor;
         ctx.lineWidth = 2;
-        setShadowBlur(5);
+        ctx.shadowBlur = 5;
         ctx.shadowColor = neonColor;
         ctx.beginPath();
         ctx.moveTo(antennaX, y + height);
@@ -541,7 +517,7 @@ function drawBuilding(x, y, width, height, color, neonColor, glowIntensity, isTo
         const blink = Math.sin(Date.now() / 1500) * 0.3 + 0.7; // Más lento y menos variación
         ctx.fillStyle = neonColor;
         ctx.globalAlpha = blink;
-        setShadowBlur(15);
+        ctx.shadowBlur = 15;
         ctx.shadowColor = neonColor;
         ctx.beginPath();
         ctx.arc(antennaX, y + height - 25, 4, 0, Math.PI * 2);
@@ -712,11 +688,11 @@ function playSound(type) {
 // Hacer responsive el canvas
 function resizeCanvas() {
     const container = canvas.parentElement;
-    const maxWidth = Math.min(baseWidth, container.clientWidth - 40);
-    const scale = maxWidth / baseWidth;
+    const maxWidth = Math.min(800, container.clientWidth - 40);
+    const scale = maxWidth / 800;
     
     canvas.style.width = maxWidth + 'px';
-    canvas.style.height = (baseHeight * scale) + 'px';
+    canvas.style.height = (600 * scale) + 'px';
 }
 
 window.addEventListener('resize', resizeCanvas);
