@@ -68,3 +68,6 @@ Este proyecto es de código abierto y está disponible para uso personal y educa
 ---
 
 **¡Disfruta volando por la metrópolis futurista!** 🦇🌃✨
+
+---
+*Última actualización: 2025*
