@@ -19,8 +19,8 @@ const bat = {
     width: 50,
     height: 40,
     velocity: 0,
-    gravity: 0.5,
-    jump: -10,
+    gravity: 0.3,
+    jump: -12,
     rotation: 0,
     wingAngle: 0,
     wingSpeed: 0.3
@@ -106,7 +106,7 @@ function startGame() {
     score = 0;
     obstacles = [];
     bat.y = canvas.height / 2;
-    bat.velocity = 0;
+    bat.velocity = -2;
     frameCount = 0;
     gameLoop();
 }
