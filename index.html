@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦇 Murciélago en la Metrópolis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🦇 Murciélago en la Metrópolis 🏙️</h1>
+        </div>
+        
+        <div class="game-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            
+            <div id="startScreen" class="screen">
+                <h2>¡Ayuda al Murciélago!</h2>
+                <p>Haz clic o toca la pantalla para volar</p>
+                <p>Evita los edificios</p>
+                <button id="startButton" class="game-button">¡EMPEZAR A JUGAR!</button>
+                <div class="instructions">
+                    <p>🖱️ Haz clic para volar</p>
+                    <p>📱 Toca la pantalla en móvil</p>
+                    <p>Espacio en teclado</p>
+                </div>
+            </div>
+            
+            <div id="gameOverScreen" class="screen hidden">
+                <h2>¡Juego Terminado!</h2>
+                <p class="score-text">Tu puntuación: <span id="finalScore">0</span></p>
+                <p class="best-score">Mejor puntuación: <span id="bestScore">0</span></p>
+                <button id="restartButton" class="game-button">¡JUGAR DE NUEVO!</button>
+            </div>
+            
+            <div class="score-display">
+                <div class="current-score">
+                    <span class="score-label">Puntos:</span>
+                    <span id="score">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🎮 ¡Diviértete volando por la ciudad!</p>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
+
+
